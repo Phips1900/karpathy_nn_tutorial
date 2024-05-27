@@ -39,15 +39,6 @@ def draw_dot(root):
 
     return dot
 
-def f(x):
-    return 3*x**2 - 4*x + 5
-
-
-print(f(3.0))
-xs = np.arange(-5, 5, 0.25)
-ys = f(xs)
-plt.plot(xs, ys)
-plt.show()
 
 # inputs
 h = 0.0001
@@ -55,20 +46,22 @@ a = 2.0
 b = -3.0
 c = 10.0
 
-d1 = a*b + c
+d1 = a * b + c
 b += h
-d2 = a*b + c
+d2 = a * b + c
 print('d1', d1)
 print('d2', d2)
-print('slope', (d2 - d1)/h)
+print('slope', (d2 - d1) / h)
 
 
 class Value:
 
-    def __init__(self, data, _children=(), _op=''):
+    def __init__(self, data, _children=(), _op='', label=''):
         self.data = data
+        self.grad = 0.0
         self._prev = set(_children)
         self._op = _op
+        self.label = label
 
     def __repr__(self):
         return f"Value(data={self.data})"
@@ -82,11 +75,18 @@ class Value:
         return out
 
 
-a = Value(2.0)
-b = Value(-3.0)
-c = Value(10.0)
-d = a * b + c
-print(d)
-print(d._prev)
-print(d._op)
+a = Value(2.0, label='a')
+b = Value(-3.0, label='b')
+c = Value(10.0, label='c')
+e = a * b
+e.label = 'e'
+d = e + c
+d.label = 'd'
+f = Value(-2.0, label='f')
+L = d * f
+L.label = 'L'
+
+x = draw_dot(L)
+# x.view()
 # (a.__mul__(b)).__add__(c)
+
